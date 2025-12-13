@@ -1,0 +1,26 @@
+# ---- Virtual environments ----
+basic/
+venv/
+.env/
+
+# ---- Python cache ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ---- Test / tool caches ----
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---- Editor / OS junk ----
+.vscode/
+.DS_Store
+
+# ---- Data (optional, see note below) ----
+data/raw/
+data/processed/
+
+# ---- Reports (generated outputs) ----
+reports/
