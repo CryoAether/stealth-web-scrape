@@ -18,4 +18,12 @@ The focus is on reliability, clarity, and usability rather than aggressive scrap
 - Clean separation between scraping, data storage, and presentation
 - Lightweight web interface for viewing and sorting listings
 
-## Project Structure
+## Demo
+
+<p align="center">
+  <img src="docs/image_1.png" alt="Web Interface Demo" width="800">
+</p>
+
+<p align="center">
+  <em>Sortable web interface displaying scraped listing data</em>
+</p>
