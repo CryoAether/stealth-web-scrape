@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motorcycle Listings</title>
+    <style>
+    :root {
+        --bg-color: #f4f4f9;
+        --card-bg: #ffffff;
+        --text-main: #333333;
+        --text-secondary: #666666;
+        --border-color: #dddddd;
+        --shadow-color: rgba(0,0,0,0.1);
+        --btn-bg: #007bff;
+        --btn-hover: #0056b3;
+    }
+
+    .midnight-mode {
+        --bg-color: #0b1416; 
+        --card-bg: #1a282d;  
+        --text-main: #d7dadc;
+        --text-secondary: #818384;
+        --border-color: #343536;
+        --shadow-color: rgba(0,0,0,0.5);
+        --btn-bg: #3f9ade;   
+        --btn-hover: #337cb2;
+    }
+
+    /* --- PAGE STYLES --- */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        padding: 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Control Bar */
+    .controls {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px var(--shadow-color);
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        border: 1px solid var(--border-color);
+    }
+    
+    input, select, button {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background: var(--bg-color);
+        color: var(--text-main);
+    }
+
+    #theme-toggle {
+        margin-left: auto;
+        background: transparent;
+        border: 1px solid var(--text-secondary);
+        cursor: pointer;
+    }
+
+    /* Card Styles */
+    .listing-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;}
+    
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        width: 300px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px var(--shadow-color);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .card img { width: 100%; height: 200px; object-fit: cover; }
+    .card-body { padding: 15px; }
+    
+    .card-title { font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
+    .price { color: #27ae60; font-weight: bold; font-size: 1.2em; }
+    .meta { color: var(--text-secondary); font-size: 0.9em; display: flex; justify-content: space-between;}
+    
+    .btn {
+        display: block;
+        text-align: center;
+        background: var(--btn-bg);
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+    .btn:hover { background: var(--btn-hover); }
+</style>
+</head>
+<body>
+
+    <form class="controls" action="/" method="get">
+        <input type="text" name="search" placeholder="Search titles..." value="{{ current_search }}">
+        
+        <select name="brand">
+            <option value="">All Brands</option>
+            <option value="Harley Davidson" {% if current_brand == 'Harley Davidson' %}selected{% endif %}>Harley Davidson</option>
+            <option value="Kawasaki" {% if current_brand == 'Kawasaki' %}selected{% endif %}>Kawasaki</option>
+            <option value="Honda" {% if current_brand == 'Honda' %}selected{% endif %}>Honda</option>
+            <option value="BMW" {% if current_brand == 'BMW' %}selected{% endif %}>BMW</option>
+            <option value="Triumph" {% if current_brand == 'Triumph' %}selected{% endif %}>Triumph</option>
+            <option value="Other" {% if current_brand == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+        
+        <select name="location">
+            <option value="">All Locations</option>
+            
+            {% for state in available_states %}
+                <option value="{{ state }}" {% if current_location == state %}selected{% endif %}>
+                    {{ state }}
+                </option>
+            {% endfor %}
+            
+            <option value="Other" {% if current_location == 'Other' %}selected{% endif %}>Other</option>
+        </select>      
+
+        <select name="sort">
+            <option value="">Sort By...</option>
+            <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            <option value="year_new" {% if current_sort == 'year_new' %}selected{% endif %}>Year: Newest First</option>
+            <option value="year_old" {% if current_sort == 'year_old' %}selected{% endif %}>Year: Oldest First</option>
+        </select>
+        
+    
+        <button type="submit">Apply Filters</button>
+        <a href="/" style="color: var(--text-secondary); text-decoration: none; margin-left: 10px;">Reset</a>
+
+        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌙 Midnight Mode</button>
+    </form>
+
+    <div class="listing-container">
+        {% for item in items %}
+        <div class="card">
+            <img src="{{ item.Image }}" alt="Bike">
+                    
+            <div class="card-body">
+                <div class="card-title">{{ item.Listing }}</div>
+                
+                <div class="meta">
+                    <span>Year: {{ item.CleanYear }}</span>
+                    <span>{{ item.DetectedBrand }}</span>
+                </div>
+                
+                <p class="price">{{ item.Price }}</p>
+                <p style="color: #888; font-size: 0.8rem">📍 {{ item.Location }}</p>
+                
+                <a href="{{ item.Link }}" target="_blank" class="btn">View on Craigslist</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('theme-toggle');
+        
+        // Toggle the class
+        body.classList.toggle('midnight-mode');
+        
+        // Save preference and update button text
+        if (body.classList.contains('midnight-mode')) {
+            localStorage.setItem('theme', 'midnight');
+            btn.innerText = "☀️ Light Mode";
+        } else {
+            localStorage.setItem('theme', 'light');
+            btn.innerText = "🌙 Midnight Mode";
+        }
+    }
+
+    // Check for saved user preference on load
+    window.onload = function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'midnight') {
+            document.body.classList.add('midnight-mode');
+            document.getElementById('theme-toggle').innerText = "☀️ Light Mode";
+        }
+    }
+</script>
+</body>
+</body>
+</html>
