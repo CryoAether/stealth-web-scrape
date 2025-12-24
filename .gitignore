@@ -1,8 +1,14 @@
+# Scraped output / generated content
 scraped_pages/
 static/
 web_scraping/
+
+# Data files
 listings.csv
-motorycle_CL.html
 motorcycles.html
-.vscode
+motorcycles_CL.html
+
+# Environment / tooling
 .scrape_env/
+.vscode/
+.DS_Store
